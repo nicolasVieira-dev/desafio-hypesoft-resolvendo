@@ -1,7 +1,7 @@
 "use client";
 
 import {useWeather } from "@/hooks/useWeather";
-import { Button } from "@/components/UI/button";
+import { Button } from "@/components/ui/button";
 
 export default function Home() {
   const { data, isLoading, error } = useWeather();
