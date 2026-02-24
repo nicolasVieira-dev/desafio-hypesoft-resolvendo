@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import {
@@ -15,7 +16,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-
 import {
   Form,
   FormControl,
@@ -24,13 +24,24 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 
 import { productSchema, type ProductFormData } from "@/schemas/product.schema";
+
+import { useCategories } from "@/hooks/useCategories";
 import { useCreateProduct } from "@/hooks/useProducts";
 
 export function CreateProductDialog() {
+
   const [open, setOpen] = useState(false);
   const { mutateAsync, isPending } = useCreateProduct();
+  const { data: categories = [] } = useCategories();
 
   const form = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
@@ -151,7 +162,18 @@ export function CreateProductDialog() {
                 <FormItem>
                   <FormLabel>Categoria</FormLabel>
                   <FormControl>
-                    <Input placeholder="ID da categoria" {...field} />
+                    <Select value={field.value} onValueChange={field.onChange}>
+                        <SelectTrigger>
+                            <SelectValue placeholder="Selecione uma categoria" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {categories.map((c) => (
+                                <SelectItem key={c.id} value={c.id}>
+                                    {c.name}
+                                </SelectItem>
+                            ))}
+                        </SelectContent>
+                    </Select>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

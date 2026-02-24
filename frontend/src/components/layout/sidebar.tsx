@@ -29,12 +29,12 @@ export function Sidebar() {
                 </Link>
 
                 <Link
-                href="/tags"
+                href="/categories"
                 className="flex items-center gap-2 p-2 rounded-lg hover:bg-muted"
                 >
 
                     <Tags size={18} />
-                    Categorias
+                    Categories
                 </Link>
             </nav>
         </aside>
