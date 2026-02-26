@@ -5,6 +5,7 @@ using MediatR;
 using Microsoft.AspNetCore.RateLimiting;
 using Serilog;
 using System.Threading.RateLimiting;
+using Hypesoft.API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,11 +50,15 @@ builder.Services.AddCors(opt =>
          .AllowAnyMethod());
 });
 
+builder.Services.AddTransient<ExceptionMiddleware>();
+
 var app = builder.Build();
 
 app.UseSerilogRequestLogging();
 
 app.UseCors();
+
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.UseRateLimiter();
 

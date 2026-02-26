@@ -4,6 +4,8 @@ using Hypesoft.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Hypesoft.Application.Interfaces;
+using Hypesoft.Infrastructure.Services;
 
 namespace Hypesoft.Infrastructure.Configurations;
 
@@ -20,6 +22,7 @@ public static class DependencyInjection
 
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
+        services.AddScoped<IDashboardReadService, DashboardReadService>();
 
         return services;
     }

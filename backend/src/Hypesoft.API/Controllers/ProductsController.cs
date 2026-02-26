@@ -3,6 +3,7 @@ using Hypesoft.Application.Products.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace Hypesoft.API.Controllers;
 
 [ApiController]
@@ -27,4 +28,27 @@ public class ProductsController : ControllerBase
         var id = await _mediator.Send(cmd, ct);
         return Ok(new { id });
     }
+    [HttpPut("{id:guid}")]
+public async Task<IActionResult> Update(Guid id, [FromBody] UpdateProductCommand body, CancellationToken ct)
+{
+    // garante que o Id da rota manda
+    var cmd = body with { Id = id };
+    await _mediator.Send(cmd, ct);
+    return NoContent();
+}
+
+[HttpPatch("{id:guid}/stock")]
+public async Task<IActionResult> UpdateStock(Guid id, [FromBody] UpdateProductStockCommand body, CancellationToken ct)
+{
+    var cmd = body with { Id = id };
+    await _mediator.Send(cmd, ct);
+    return NoContent();
+}
+
+[HttpDelete("{id:guid}")]
+public async Task<IActionResult> Delete(Guid id, CancellationToken ct)
+{
+    await _mediator.Send(new DeleteProductCommand(id), ct);
+    return NoContent();
+}
 }
