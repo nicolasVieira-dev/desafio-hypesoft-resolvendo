@@ -1,7 +1,7 @@
 "use client";
 
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { createCategory, getCategories } from "@/services/category.service";
+import { createCategory, deleteCategory, getCategories, updateCategory } from "@/services/category.service";
 
 function slugify(name: string) {
   return name.toLowerCase().trim().replace(/\s+/g, "-");
@@ -17,9 +17,24 @@ export function useCategories() {
 
 export function useCreateCategory() {
   const qc = useQueryClient();
-
   return useMutation({
     mutationFn: async (name: string) => createCategory({ id: slugify(name), name }),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["categories"] }),
+  });
+}
+
+export function useUpdateCategory() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: ({ id, name }: { id: string; name: string }) => updateCategory(id, name),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ["categories"] }),
+  });
+}
+
+export function useDeleteCategory() {
+  const qc = useQueryClient();
+  return useMutation({
+    mutationFn: (id: string) => deleteCategory(id),
     onSuccess: () => qc.invalidateQueries({ queryKey: ["categories"] }),
   });
 }

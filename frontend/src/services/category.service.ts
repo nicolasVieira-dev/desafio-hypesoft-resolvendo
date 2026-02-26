@@ -10,3 +10,11 @@ export async function createCategory(payload: { id: string; name: string }): Pro
   const res = await api.post<{ id: string }>("/api/categories", payload);
   return res.data;
 }
+
+export async function updateCategory(id: string, name: string) {
+  await api.put(`/api/categories/${id}`, { id, name });
+}
+
+export async function deleteCategory(id: string) {
+  await api.delete(`/api/categories/${id}`);
+}

@@ -1,6 +1,7 @@
 import { api } from "@/services/api";
 import { Product } from "@/types/product";
 import { ProductFormData } from "@/schemas/product.schema";
+import axios from "axios";
 
 export type PagedResult<T> = {
   items: T[];
@@ -20,18 +21,28 @@ export async function getProducts(params: {
 }
 
 export async function createProduct(data: ProductFormData): Promise<{ id: string }> {
-  const res = await api.post<{ id: string }>("/api/products", data);
+  const payload = {
+    ...data,
+    price: Number(data.price),
+    stockQuantity: Number(data.stockQuantity),
+  };
+  const res = await api.post<{ id: string }>("/api/products", payload);
   return res.data;
 }
 
 export async function updateProduct(id: string, data: Omit<ProductFormData, "stockQuantity">) {
-  await api.put(`/api/products/${id}`, { id: "00000000-0000-0000-0000-000000000000", ...data });
+  const payload = {
+    id: "00000000-0000-0000-0000-000000000000",
+    ...data,
+    price: Number(data.price),
+  };
+  await api.put(`/api/products/${id}`, payload);
 }
 
 export async function updateProductStock(id: string, stockQuantity: number) {
   await api.patch(`/api/products/${id}/stock`, {
     id: "00000000-0000-0000-0000-000000000000",
-    stockQuantity,
+    stockQuantity: Number(stockQuantity),
   });
 }
 
