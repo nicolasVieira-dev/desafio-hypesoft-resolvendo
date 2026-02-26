@@ -6,5 +6,5 @@ public record ProductDto(
     string Description,
     decimal Price,
     string CategoryId,
-    int Stock
+    int StockQuantity
 );

@@ -7,19 +7,20 @@ import { ProductFilters } from "@/components/products/product-filters";
 import { useProducts } from "@/hooks/useProducts";
 
 export default function ProductsPage() {
-  const { data, isLoading } = useProducts();
-
   const [search, setSearch] = useState("");
   const [categoryId, setCategoryId] = useState("all");
 
-  const filtered = useMemo(() => {
-    const list = data ?? [];
-    return list.filter((p) => {
-      const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase());
-      const matchesCategory = categoryId === "all" ? true : p.categoryId === categoryId;
-      return matchesSearch && matchesCategory;
-    });
-  }, [data, search, categoryId]);
+  const { data, isLoading } = useProducts({
+    page: 1,
+    pageSize: 50,
+    search: search || undefined,
+    categoryId: categoryId === "all" ? undefined : categoryId,
+  });
+
+  const items = data?.items ?? [];
+
+  // (Opcional) ainda filtra localmente, mas já está filtrando no backend.
+  const filtered = useMemo(() => items, [items]);
 
   return (
     <div className="space-y-6">

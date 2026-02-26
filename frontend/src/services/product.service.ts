@@ -1,39 +1,40 @@
+import { api } from "@/services/api";
 import { Product } from "@/types/product";
 import { ProductFormData } from "@/schemas/product.schema";
 
-let productsDb: Product[] = [
-  {
-    id: "1",
-    name: "Caneca Hypesoft",
-    description: "Caneca oficial",
-    price: 35,
-    categoryId: "home",
-    stockQuantity: 8,
-  },
-  {
-    id: "2",
-    name: "Camiseta Dev",
-    description: "Algodão",
-    price: 80,
-    categoryId: "fashion",
-    stockQuantity: 15,
-  },
-];
+export type PagedResult<T> = {
+  items: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+};
 
-export async function getProducts(): Promise<Product[]> {
-    await new Promise((resolve) => setTimeout(resolve, 250));
-    
-    return productsDb;
+export async function getProducts(params: {
+  page: number;
+  pageSize: number;
+  search?: string;
+  categoryId?: string;
+}): Promise<PagedResult<Product>> {
+  const res = await api.get<PagedResult<Product>>("/api/products", { params });
+  return res.data;
 }
 
-export async function createProduct(data: ProductFormData): Promise<Product> {
-    await new Promise((resolve) => setTimeout(resolve, 250));
+export async function createProduct(data: ProductFormData): Promise<{ id: string }> {
+  const res = await api.post<{ id: string }>("/api/products", data);
+  return res.data;
+}
 
-    const newProduct: Product = {
-        id: crypto.randomUUID(),
-        ...data,
-    };
+export async function updateProduct(id: string, data: Omit<ProductFormData, "stockQuantity">) {
+  await api.put(`/api/products/${id}`, { id: "00000000-0000-0000-0000-000000000000", ...data });
+}
 
-    productsDb = [newProduct, ...productsDb];
-    return newProduct;
+export async function updateProductStock(id: string, stockQuantity: number) {
+  await api.patch(`/api/products/${id}/stock`, {
+    id: "00000000-0000-0000-0000-000000000000",
+    stockQuantity,
+  });
+}
+
+export async function deleteProduct(id: string) {
+  await api.delete(`/api/products/${id}`);
 }
