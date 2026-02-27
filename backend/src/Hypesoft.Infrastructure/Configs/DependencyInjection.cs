@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Hypesoft.Application.Interfaces;
 using Hypesoft.Infrastructure.Services;
 
+
 namespace Hypesoft.Infrastructure.Configurations;
 
 public static class DependencyInjection
@@ -20,6 +21,7 @@ public static class DependencyInjection
             opt.UseMongoDB(connectionString, databaseName: config["Mongo:Database"] ?? "hypesoftdb");
         });
 
+        services.AddScoped<ICategoryMigrationService, CategoryMigrationService>();
         services.AddScoped<IProductRepository, ProductRepository>();
         services.AddScoped<ICategoryRepository, CategoryRepository>();
         services.AddScoped<IDashboardReadService, DashboardReadService>();

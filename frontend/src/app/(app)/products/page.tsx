@@ -25,7 +25,7 @@ export default function ProductsPage() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h1 className="text-2xl font-semibold">Produtos</h1>
+        <h1 className="text-2xl font-semibold m-4">Produtos</h1>
         <CreateProductDialog />
       </div>
 

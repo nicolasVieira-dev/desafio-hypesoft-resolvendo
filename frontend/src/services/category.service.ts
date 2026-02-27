@@ -11,8 +11,8 @@ export async function createCategory(payload: { id: string; name: string }): Pro
   return res.data;
 }
 
-export async function updateCategory(id: string, name: string) {
-  await api.put(`/api/categories/${id}`, { id, name });
+export async function updateCategory(id: string, payload: { newId: string; name: string }) {
+  await api.put(`/api/categories/${id}`, { id, newId: payload.newId, name: payload.name });
 }
 
 export async function deleteCategory(id: string) {

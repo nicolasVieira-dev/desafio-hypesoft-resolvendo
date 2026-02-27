@@ -53,4 +53,10 @@ public class ProductRepository : IProductRepository
         _db.Products.Remove(product);
         await _db.SaveChangesAsync(ct);
     }
+
+    public async Task<bool> ExistsByCategoryAsync(string categoryId, CancellationToken ct)
+{
+    return await _db.Products
+        .AnyAsync(p => p.CategoryId == categoryId, ct);
+}
 }

@@ -21,4 +21,15 @@ public class CategoryRepository : ICategoryRepository
         _db.Categories.Add(category);
         await _db.SaveChangesAsync(ct);
     }
+    public async Task UpdateAsync(Category category, CancellationToken ct)
+    {
+        _db.Categories.Update(category);
+        await _db.SaveChangesAsync(ct);
+    }
+
+    public async Task DeleteAsync(Category category, CancellationToken ct)
+    {
+        _db.Categories.Remove(category);
+        await _db.SaveChangesAsync(ct);
+    }
 }

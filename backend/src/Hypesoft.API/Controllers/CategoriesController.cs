@@ -19,4 +19,19 @@ public class CategoriesController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create([FromBody] CreateCategoryCommand cmd, CancellationToken ct)
         => Ok(new { id = await _mediator.Send(cmd, ct) });
+
+    [HttpPut("{id}")]
+    public async Task<IActionResult> Update(string id, [FromBody] UpdateCategoryCommand body, CancellationToken ct)
+    {
+        var cmd = body with { Id = id };
+        await _mediator.Send(cmd, ct);
+        return NoContent();
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(string id, CancellationToken ct)
+    {
+        await _mediator.Send(new DeleteCategoryCommand(id), ct);
+        return NoContent();
+    }
 }

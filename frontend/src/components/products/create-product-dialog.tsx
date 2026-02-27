@@ -63,7 +63,9 @@ export function CreateProductDialog() {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button>Novo Produto</Button>
+        <Button className="bg-blue-700 hover:bg-black text-white px-4 py-2 rounded ">
+          Novo Produto
+        </Button>
       </DialogTrigger>
 
       <DialogContent>
