@@ -41,6 +41,7 @@ export function CreateCategoryDialog() {
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
+          
           <Button className="w-full" onClick={onCreate} disabled={isPending}>
             {isPending ? "Salvando..." : "Salvar"}
           </Button>
