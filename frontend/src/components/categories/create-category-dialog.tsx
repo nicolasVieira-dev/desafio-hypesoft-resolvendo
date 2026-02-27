@@ -23,6 +23,7 @@ export function CreateCategoryDialog() {
     setName("");
     setOpen(false);
   }
+  
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
