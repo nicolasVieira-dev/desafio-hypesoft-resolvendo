@@ -3,10 +3,13 @@ using Hypesoft.Application.Products.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Hypesoft.API.Contracts.Products;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace Hypesoft.API.Controllers;
 
+
+[Authorize]
 [ApiController]
 [Route("api/products")]
 public class ProductsController : ControllerBase

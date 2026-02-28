@@ -1,9 +1,10 @@
 using Hypesoft.Application.Dashboard.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hypesoft.API.Controllers;
-
+[Authorize]
 [ApiController]
 [Route("api/dashboard")]
 public class DashboardController : ControllerBase

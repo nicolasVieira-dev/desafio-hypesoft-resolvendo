@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Package, LayoutDashboard, Tags } from "lucide-react";
 
-export function Sidebar() {
+export function AppSidebar() {
     return (
         <aside className="w-64 h-screen border-r bg-background p-4">
             <h1 className="text-xl font-bold mb-8">Hypesoft</h1>

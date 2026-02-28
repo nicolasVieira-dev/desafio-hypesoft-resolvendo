@@ -1,7 +1,6 @@
 version: "3.9"
 
 services:
-
   mongodb:
     image: mongo:7
     container_name: hypesoft-mongo
@@ -34,7 +33,7 @@ services:
       - hypesoft-network
 
   keycloak:
-    image: quay.io/keycloak/keycloak:24.0
+    image: quay.io/keycloak/keycloak:25.0
     container_name: hypesoft-keycloak
     command: start-dev
     environment:
@@ -42,6 +41,54 @@ services:
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
     ports:
       - "8080:8080"
+    networks:
+      - hypesoft-network
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: hypesoft-api
+    restart: always
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://+:5000
+      # Mongo (ajuste o nome da chave conforme seu appsettings)
+      ConnectionStrings__Mongo: mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@mongodb:27017/${MONGO_DB}?authSource=admin
+      # Keycloak (seu backend valida JWT)
+      Auth__Authority: http://keycloak:8080/realms/Hypesoft
+      Auth__Audience: account
+    ports:
+      - "5001:5000"
+    depends_on:
+      - mongodb
+      - keycloak
+    networks:
+      - hypesoft-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: hypesoft-frontend
+    restart: always
+    environment:
+      NEXTAUTH_URL: ${NEXTAUTH_URL}
+      NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
+
+      AUTH_KEYCLOAK_ID: ${AUTH_KEYCLOAK_ID}
+      AUTH_KEYCLOAK_SECRET: ${AUTH_KEYCLOAK_SECRET}
+
+      # issuer dentro do docker (importante!)
+      AUTH_KEYCLOAK_ISSUER: http://keycloak:8080/realms/Hypesoft
+
+      # URL do backend para o browser
+      NEXT_PUBLIC_API_URL: http://localhost:5000
+    ports:
+      - "${FRONTEND_PORT}:3000"
+    depends_on:
+      - api
+      - keycloak
     networks:
       - hypesoft-network
 

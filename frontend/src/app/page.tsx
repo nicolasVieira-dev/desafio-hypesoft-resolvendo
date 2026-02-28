@@ -1,28 +1,13 @@
-"use client";
+import { LoginButton } from "@/components/auth/login-button";
 
-import {useWeather } from "@/hooks/useWeather";
-import { Button } from "@/components/ui/button";
-
-export default function Home() {
-  const { data, isLoading, error } = useWeather();
-  
-  if (isLoading) return <p>Loading...</p>;
-
+export default function HomePage() {
   return (
-    <main className="p-10">
-      <h1 className="text-2xl font-bold mb-4">
-        Eaiiiiiiii
-      </h1>
-      <div className="">
-        TAilwind
+    <main className="min-h-screen flex items-center justify-center p-6">
+      <div className="max-w-md w-full space-y-4 text-center">
+        <h1 className="text-2xl font-semibold">Hypesoft</h1>
+        <p className="text-sm text-muted-foreground">Faça login para acessar o sistema.</p>
+        <LoginButton />
       </div>
-
-    <div className="p-10">
-      <Button>Hypesoft Dashboard 🚀</Button>
-    </div>
-
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-
     </main>
-  )
+  );
 }

@@ -6,8 +6,68 @@ using Microsoft.AspNetCore.RateLimiting;
 using Serilog;
 using System.Threading.RateLimiting;
 using Hypesoft.API.Middlewares;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
+var authority = builder.Configuration["Auth:Authority"];
+var audience = builder.Configuration["Auth:Audience"];
+
+builder.Services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Authority = authority;
+        options.Audience = audience;
+        options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidIssuer = authority,
+            ValidateAudience = true,
+            ValidAudience = audience,
+            ValidateLifetime = true
+        };
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            NameClaimType = "preferred_username",
+            RoleClaimType = "roles"
+        };
+        options.Events = new JwtBearerEvents
+{
+    OnTokenValidated = context =>
+    {
+        var identity = context.Principal?.Identity as System.Security.Claims.ClaimsIdentity;
+        if (identity is null) return Task.CompletedTask;
+
+        var realmAccess = context.Principal?.FindFirst("realm_access")?.Value;
+        if (string.IsNullOrWhiteSpace(realmAccess)) return Task.CompletedTask;
+
+        
+        using var doc = System.Text.Json.JsonDocument.Parse(realmAccess);
+        if (doc.RootElement.TryGetProperty("roles", out var rolesEl) && rolesEl.ValueKind == System.Text.Json.JsonValueKind.Array)
+        {
+            foreach (var r in rolesEl.EnumerateArray())
+            {
+                var role = r.GetString();
+                if (!string.IsNullOrWhiteSpace(role))
+                    identity.AddClaim(new System.Security.Claims.Claim("roles", role));
+            }
+        }
+
+        return Task.CompletedTask;
+    }
+};
+    });
+
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("ManagerOrAdmin", policy => policy.RequireRole("Manager", "Admin"));
+
+});
+
+
 
 builder.Host.UseSerilog((ctx, cfg) =>
     cfg.ReadFrom.Configuration(ctx.Configuration)
@@ -54,6 +114,10 @@ builder.Services.AddTransient<ExceptionMiddleware>();
 
 var app = builder.Build();
 
+
+app.UseAuthentication();
+app.UseAuthorization();
+
 app.UseSerilogRequestLogging();
 
 app.UseCors();
@@ -72,3 +136,4 @@ app.MapHealthChecks("/health");
 
 app.MapControllers();
 app.Run();
+public partial class Program { }

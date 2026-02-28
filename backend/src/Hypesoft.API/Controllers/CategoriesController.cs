@@ -2,9 +2,10 @@ using Hypesoft.Application.Categories.Commands;
 using Hypesoft.Application.Categories.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Hypesoft.API.Controllers;
-
+[Authorize]
 [ApiController]
 [Route("api/categories")]
 public class CategoriesController : ControllerBase
