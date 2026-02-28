@@ -26,3 +26,14 @@ docker-data
 # IDE
 .vscode/*
 !.vscode/settings.json
+
+# env
+.env
+.env.*
+!.env.example
+.env.local
+
+# next
+frontend/.env
+frontend/.env.*
+!frontend/.env.example
