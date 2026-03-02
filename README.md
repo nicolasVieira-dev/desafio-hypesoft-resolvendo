@@ -2,36 +2,85 @@
 
 Sistema completo de gestão de produtos desenvolvido como desafio técnico para a Hypesoft.
 
-O projeto demonstra arquitetura moderna, boas práticas de desenvolvimento, Clean Architecture com DDD, CQRS, autenticação via Keycloak e containerização com Docker Compose.
+O projeto demonstra arquitetura moderna, boas práticas de desenvolvimento, organização em camadas, autenticação via OAuth2/OpenID Connect e execução completa via Docker Compose.
+
+---
+
+# 🎯 Objetivo
+
+Construir uma aplicação full stack para gestão de produtos com:
+
+- CRUD completo
+- Gestão de categorias
+- Dashboard com métricas
+- Autenticação segura
+- Arquitetura escalável
+- Testes automatizados
+- Execução containerizada
 
 ---
 
 # 🏗 Arquitetura
 
-O sistema foi desenvolvido seguindo os princípios de:
+O backend foi desenvolvido seguindo os princípios de:
 
 - Clean Architecture
 - Domain-Driven Design (DDD)
 - CQRS com MediatR
-- Separação clara entre camadas
-- Código limpo e princípios SOLID
+- Princípios SOLID
+- Separação clara de responsabilidades
+
+Essa abordagem garante:
+
+- Baixo acoplamento
+- Alta coesão
+- Manutenibilidade
+- Escalabilidade futura
+
+---
 
 ## 📦 Estrutura do Backend
 
+```
 src/
 ├── Hypesoft.Domain
 ├── Hypesoft.Application
 ├── Hypesoft.Infrastructure
 └── Hypesoft.API
+```
 
+### Camadas
 
-- **Domain** → Entidades, regras de negócio
-- **Application** → Commands, Queries, Handlers (CQRS)
-- **Infrastructure** → Persistência MongoDB, serviços externos
-- **API** → Controllers, Middlewares, configuração
+**Domain**
+- Entidades
+- Regras de negócio
+- Interfaces de repositório
+
+**Application**
+- Commands e Queries (CQRS)
+- Handlers (MediatR)
+- Validações
+- DTOs
+
+**Infrastructure**
+- Implementação de repositórios
+- Persistência MongoDB
+- Configurações externas
+
+**API**
+- Controllers
+- Middlewares
+- Autenticação
+- Health checks
+- Configuração geral da aplicação
+
+---
 
 ## 🖥 Estrutura do Frontend
 
+Baseado em Next.js 14 (App Router):
+
+```
 src/
 ├── app/
 ├── components/
@@ -39,13 +88,19 @@ src/
 ├── services/
 ├── schemas/
 └── lib/
+```
 
+### Tecnologias
 
-- Next.js 14 (App Router)
-- React Query
+- Next.js 14
+- TypeScript
+- TanStack Query
 - React Hook Form + Zod
-- TailwindCSS + shadcn/ui
+- TailwindCSS
+- shadcn/ui
 - Recharts
+- NextAuth
+- Keycloak (OIDC)
 
 ---
 
@@ -53,7 +108,7 @@ src/
 
 ## Backend
 - .NET 9
-- Entity Framework Core (MongoDB Provider)
+- MongoDB
 - MediatR
 - FluentValidation
 - Serilog
@@ -62,17 +117,14 @@ src/
 ## Frontend
 - Next.js 14
 - TypeScript
-- TailwindCSS
-- shadcn/ui
 - TanStack Query
-- NextAuth
-- Keycloak
+- TailwindCSS
 
 ## Infraestrutura
-- MongoDB
-- Keycloak
 - Docker
 - Docker Compose
+- MongoDB
+- Keycloak
 
 ---
 
@@ -80,33 +132,33 @@ src/
 
 - OAuth2 / OpenID Connect via Keycloak
 - JWT validado no backend
-- Rotas protegidas no frontend
 - Endpoints protegidos com Bearer Token
-- Health checks implementados
+- Rotas protegidas no frontend
 - Middleware global de tratamento de exceções
-- Testes garantindo que endpoints protegidos retornam 401
+- Health check implementado
+- Testes garantindo retorno 401 para usuários não autenticados
 
 ---
 
 # 📊 Funcionalidades Implementadas
 
-## ✅ Gestão de Produtos
+## Gestão de Produtos
 - Criar produto
 - Listar produtos
-- Editar produto
+- Atualizar produto
 - Excluir produto
 - Busca por nome
 - Controle de estoque
 - Destaque para estoque baixo
 
-## ✅ Categorias
+## Gestão de Categorias
 - Criar categoria
 - Atualizar categoria
 - Excluir categoria
 - Associação com produtos
 - Filtro por categoria
 
-## ✅ Dashboard
+## Dashboard
 - Total de produtos
 - Valor total em estoque
 - Produtos com estoque baixo
@@ -116,24 +168,117 @@ src/
 
 # 🧪 Testes
 
-O projeto possui:
+O projeto inclui:
 
-- Testes unitários para regras de negócio
+- Testes unitários de regras de negócio
 - Testes de integração para endpoints
-- Validação de segurança (401 para usuários não autenticados)
-- Health check testado
+- Validação de segurança (401)
+- Teste de Health Check
 
-Para rodar:
+Para executar:
 
+```bash
+cd backend/tests/Hypesoft.Tests
+
+dotnet test
+```
 
 ---
 
-# 🐳 Como Executar com Docker
+# ⚙️ Variáveis de Ambiente
 
-## 1️⃣ Clonar repositório
+Arquivos `.env` não são versionados por segurança.
 
-git clone https://github.com/nicolasVieira-dev/desafio-hypesoft-resolvendo.git
-cd hypesoft-challenge
+## Backend
 
+```bash
+cp .env.example .env
+```
 
+## Frontend
 
+```bash
+cp frontend/.env.example frontend/.env.local
+```
+
+---
+
+# 🐳 Execução com Docker
+
+Subir todos os serviços:
+
+```bash
+docker compose up -d --build
+```
+
+---
+
+# 🌍 URLs
+
+Frontend:
+```
+http://localhost:3000
+```
+
+API:
+```
+http://localhost:5001
+```
+
+Swagger:
+```
+http://localhost:5001/swagger
+```
+
+Mongo Express:
+```
+http://localhost:8081
+```
+
+Keycloak:
+```
+http://localhost:8080
+```
+
+> Observação: No ambiente local a API utiliza a porta 5001 devido a conflito com serviço do macOS. Para utilizar 5000, basta ajustar o docker-compose.
+
+---
+
+# 🧠 Decisões Arquiteturais
+
+- CQRS para separar leitura e escrita
+- DDD para centralizar regras de negócio no domínio
+- MongoDB pela flexibilidade e escalabilidade
+- Next.js App Router para melhor organização
+- Docker Compose para padronizar execução em qualquer ambiente
+
+---
+
+# 📈 Escalabilidade e Evolução
+
+A arquitetura está preparada para:
+
+- Implementação de cache
+- Rate limiting
+- Paginação otimizada
+- Observabilidade avançada
+- Deploy em ambiente cloud
+
+---
+
+# 🎥 Demonstração
+
+O vídeo de apresentação cobre:
+
+- Arquitetura do sistema
+- Fluxo de autenticação
+- CRUD completo
+- Dashboard
+- Testes automatizados
+- Execução via Docker
+
+---
+
+# 👨‍💻 Autor
+
+Nicolas Vieira

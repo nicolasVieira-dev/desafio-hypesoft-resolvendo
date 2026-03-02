@@ -1,5 +1,9 @@
 "use client";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
+
 import { useState } from "react";
 import { useCategories } from "@/hooks/useCategories";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -8,6 +12,7 @@ import { CreateCategoryDialog } from "@/components/categories/create-category-di
 import { EditCategoryDialog } from "@/components/categories/edit-category-dialog";
 import { DeleteCategoryAlert } from "@/components/categories/delete-category-alert";
 import { Category } from "@/types/category";
+
 
 export default function CategoriesPage() {
   const { data = [], isLoading } = useCategories();
