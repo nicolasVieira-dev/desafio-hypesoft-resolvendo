@@ -1,6 +1,7 @@
 # 🚀 Hypesoft Challenge – Product Management System
+# (ABANDONADO)
 
-Sistema completo de gestão de produtos desenvolvido como desafio técnico para a Hypesoft.
+Sistema completo de gestão de produtos desenvolvido como desafio técnico para a Hypesoft. 
 
 O projeto demonstra arquitetura moderna, boas práticas de desenvolvimento, organização em camadas, autenticação via OAuth2/OpenID Connect e execução completa via Docker Compose.
 
