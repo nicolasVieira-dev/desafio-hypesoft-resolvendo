@@ -1,5 +1,4 @@
 # 🚀 Hypesoft Challenge – Product Management System
-# (ABANDONADO)
 
 Sistema completo de gestão de produtos desenvolvido como desafio técnico para a Hypesoft. 
 
